@@ -14,25 +14,31 @@ public class Analyzer {
         ArrayList<operationalCode> retValue = new ArrayList<>();
         int pos = 0;
         //Приходимся по всем символам
-        while (pos < code.length()) {
-            switch (code.charAt(pos++)) {
-                //Как и говорилось ранее, некоторые команды эквивалентны
-                case '>': retValue.add(new operationalCode(new NextCommand())); break;
-                case '<': retValue.add(new operationalCode(new PreviousCommand())); break;
+        ifNotBreakCode: {
+            while (pos < code.length()) {
+                switch (code.charAt(pos++)) {
+                    //Как и говорилось ранее, некоторые команды эквивалентны
+                    case '>': retValue.add(new operationalCode(new NextCommand())); break;
+                    case '<': retValue.add(new operationalCode(new PreviousCommand())); break;
 
-                case '+': retValue.add(new operationalCode(new AddCommand())); break;
-                case '-': retValue.add(new operationalCode(new SubtractCommand())); break;
+                    case '+': retValue.add(new operationalCode(new AddCommand())); break;
+                    case '-': retValue.add(new operationalCode(new SubtractCommand())); break;
 
-                case '.': retValue.add(new operationalCode(new WriteCommand())); break;
-                case '[':
-                    codeLoop = code.substring(pos, code.lastIndexOf(']'));
-                    pos += codeLoop.length();
-                    retValue.add(new operationalCode(new LoopCommand(new Memory(codeLoop))));
-                    break;
-                case ']': /**/ break;
+                    case '.': retValue.add(new operationalCode(new WriteCommand())); break;
+                    case '[':
+                        codeLoop = code.substring(pos, code.lastIndexOf(']'));
+                        pos += codeLoop.length();
+                        retValue.add(new operationalCode(new LoopCommand(new Memory(codeLoop))));
+                        break;
+                    case ']': /**/ break;
+                    default: break ifNotBreakCode;
+                }
             }
+            return retValue;
         }
-
-        return retValue;
+        System.out.println("There is incorrect char!!!" +
+                "\nYour code: " + code +
+                "\nIncorrect char is: " + code.substring(pos - 1, pos));
+        return new ArrayList<>();
     }
 }
