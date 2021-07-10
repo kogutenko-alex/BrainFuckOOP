@@ -1,4 +1,4 @@
-package ua.kogutenko.Brainfuck.Editor;
+package ua.kogutenko.Brainfuck.editor;
 
 import ua.kogutenko.Brainfuck.analizator.Analyzer;
 import ua.kogutenko.Brainfuck.command.Command;

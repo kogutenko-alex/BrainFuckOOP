@@ -1,6 +1,6 @@
 package ua.kogutenko.Brainfuck;
 
-import ua.kogutenko.Brainfuck.Editor.EditorArray;
+import ua.kogutenko.Brainfuck.editor.EditorArray;
 import ua.kogutenko.Brainfuck.memory.Memory;
 
 public class BrainFuckStart {
