@@ -22,7 +22,9 @@ public class ContainerForArray {
     }
 
     public static void writeCurrent() {
-        System.out.println(array[current_index]);
+        System.out.println(
+               array[current_index]
+        );
     }
 
     public static void zeroBox() {

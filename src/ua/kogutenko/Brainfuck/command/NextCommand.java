@@ -1,9 +1,8 @@
 package ua.kogutenko.Brainfuck.command;
 
 import ua.kogutenko.Brainfuck.array.ContainerForArray;
-import ua.kogutenko.Brainfuck.memory.Memory;
 
-public class NextCommand extends Command {
+public class NextCommand implements Command {
 
     @Override
     public void execute() {

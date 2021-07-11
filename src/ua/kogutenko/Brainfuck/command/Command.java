@@ -1,9 +1,7 @@
 package ua.kogutenko.Brainfuck.command;
 
-import ua.kogutenko.Brainfuck.memory.Memory;
+public interface Command {
 
-public abstract class Command {
-
-    public abstract void execute();
+    void execute();
 
 }

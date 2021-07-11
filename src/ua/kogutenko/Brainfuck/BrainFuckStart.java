@@ -5,7 +5,8 @@ import ua.kogutenko.Brainfuck.memory.Memory;
 
 public class BrainFuckStart {
     public static void main(String[] args) {
-        EditorArray editorArray = new EditorArray(new Memory("+[-[.]-]!+"));
+        String str = "--[----[-]+<]>---.++++++++++++.+.+++++++++.+[-->+<]";
+        EditorArray editorArray = new EditorArray(new Memory(str));
         editorArray.init();
     }
 }

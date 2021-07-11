@@ -6,7 +6,7 @@ import ua.kogutenko.Brainfuck.operationalCode.operationalCode;
 
 import java.util.ArrayList;
 
-public class LoopCommand extends Command {
+public class LoopCommand implements Command {
     private Memory memory;
 
     public LoopCommand() {
