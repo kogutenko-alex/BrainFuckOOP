@@ -6,7 +6,7 @@ public class WriteCommand implements Command {
 
     @Override
     public void execute() {
-        ContainerForArray.writeCurrent();
+        System.out.println(ContainerForArray.getCurrent());
     }
 
 }

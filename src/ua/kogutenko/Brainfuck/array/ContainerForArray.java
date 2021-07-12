@@ -21,10 +21,8 @@ public class ContainerForArray {
         current_index--;
     }
 
-    public static void writeCurrent() {
-        System.out.println(
-               array[current_index]
-        );
+    public static int getCurrent() {
+            return array[current_index];
     }
 
     public static void zeroBox() {

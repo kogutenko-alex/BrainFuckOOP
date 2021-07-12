@@ -15,49 +15,49 @@ public class Analyzer {
         int pos = 0;
         //Приходимся по всем символам
         System.out.println(code);
-        if(isValidBrackets(code)){
-        ifNotBreakCode: {
-            while (pos < code.length()) {
-                switch (code.charAt(pos++)) {
-                    //Как и говорилось ранее, некоторые команды эквивалентны
-                    case '>': retValue.add(new operationalCode(new NextCommand())); break;
-                    case '<': retValue.add(new operationalCode(new PreviousCommand())); break;
+        if(isValidBrackets(code)) {
+            ifNotBreakCode: {
+                while (pos < code.length()) {
+                    switch (code.charAt(pos++)) {
+                        //Как и говорилось ранее, некоторые команды эквивалентны
+                        case '>': retValue.add(new operationalCode(new NextCommand())); break;
+                        case '<': retValue.add(new operationalCode(new PreviousCommand())); break;
 
-                    case '+': retValue.add(new operationalCode(new AddCommand())); break;
-                    case '-': retValue.add(new operationalCode(new SubtractCommand())); break;
+                        case '+': retValue.add(new operationalCode(new AddCommand())); break;
+                        case '-': retValue.add(new operationalCode(new SubtractCommand())); break;
 
-                    case '.': retValue.add(new operationalCode(new WriteCommand())); break;
-                    case '[':
-                        char next = code.charAt(pos);
-                        if((next == '+' || next == '-') && code.charAt(pos + 1) == ']') {
-                            retValue.add(new operationalCode(new ZeroCommand()));
-                            pos += 2;
-                        } else {
-                            int a = findClosedBracket(code, pos);
-                            String s = code.substring( pos + 1,  a );
-                            retValue.add(new operationalCode( new LoopCommand( new Memory( s ))));
-                        }
-                        break;
-                    case ']': /**/ break;
-                    /*
-                    если будут дополнительные символы (фитчи) для
-                    брейнфак то дополним новым кейсом
-                    */
-                    default: break ifNotBreakCode;
+                        case '.': retValue.add(new operationalCode(new WriteCommand())); break;
+                        case '[':
+                            char next = code.charAt(pos);
+                            if((next == '+' || next == '-') && code.charAt(pos + 1) == ']') {
+                                retValue.add(new operationalCode(new ZeroCommand()));
+                                pos += 2;
+                            } else {
+                                int a = findClosedBracket(code, pos);
+                                String s = code.substring( pos + 1,  a );
+                                retValue.add(new operationalCode( new LoopCommand( new Memory( s ))));
+                            }
+                            break;
+                        case ']': /**/ break;
+                        /*
+                        если будут дополнительные символы (фитчи) для
+                        брейнфак то дополним новым кейсом
+                        */
+                        default: break ifNotBreakCode;
+                    }
                 }
+                return retValue;
             }
-            return retValue;
-        }
-        System.out.println("There is incorrect char!!!" +
-                "\nYour code: " + code +
-                "\nIncorrect char is: " + code.substring(pos - 1, pos));
+            System.out.println("There is incorrect char!!!" +
+                    "\nYour code: " + code +
+                    "\nIncorrect char is: " + code.substring(pos - 1, pos));
         } else {
             System.err.println("bad code line (brackets)");
         }
         return new ArrayList<>();
     }
 
-    private static boolean isValidBrackets(String input) {
+    public static boolean isValidBrackets(String input) {
         Map<Character, Character> brackets = new HashMap<>();
         brackets.put(']', '[');
         Deque<Character> stack = new LinkedList<>();
@@ -76,7 +76,7 @@ public class Analyzer {
         return stack.isEmpty();
     }
 
-    private static int findClosedBracket(String input, int index) {
+    public static int findClosedBracket(String input, int index) {
         Deque<Character> stack = new LinkedList<>();
         char[] inputToChar = input.toCharArray();
         for(int i = --index; i < inputToChar.length; i++){
