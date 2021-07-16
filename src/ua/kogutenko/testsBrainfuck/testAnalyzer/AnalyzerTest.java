@@ -8,11 +8,9 @@ class AnalyzerTest {
 
     @Test
     void isValidBrackets() {
-        Assertions.assertEquals(true, Analyzer.isValidBrackets("[[][[]]]"));
     }
 
     @Test
     void findClosedBracket() {
-        Assertions.assertEquals(10, Analyzer.findClosedBracket("--[--[-]+<]>---", 3));
     }
 }

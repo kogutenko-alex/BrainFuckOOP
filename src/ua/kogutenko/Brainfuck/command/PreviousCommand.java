@@ -1,12 +1,12 @@
 package ua.kogutenko.Brainfuck.command;
 
-import ua.kogutenko.Brainfuck.array.ContainerForArray;
+import ua.kogutenko.Brainfuck.memory.Memory;
 
 public class PreviousCommand implements Command {
 
     @Override
-    public void execute() {
-        ContainerForArray.prevBox();
+    public void execute(Memory memory) {
+        memory.setCurrentIndex(memory.getCurrentIndex() - 1);
     }
 
 }

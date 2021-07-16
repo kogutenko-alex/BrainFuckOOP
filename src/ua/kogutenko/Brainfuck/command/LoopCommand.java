@@ -2,28 +2,19 @@ package ua.kogutenko.Brainfuck.command;
 
 import ua.kogutenko.Brainfuck.analizator.Analyzer;
 import ua.kogutenko.Brainfuck.memory.Memory;
-import ua.kogutenko.Brainfuck.operationalCode.operationalCode;
-
-import java.util.ArrayList;
 
 public class LoopCommand implements Command {
-    private Memory memory;
 
-    public LoopCommand() {
+    InnerLoopCommand innerLoopCommand;
 
+    public LoopCommand(InnerLoopCommand innerLoopCommand) {
+        this.innerLoopCommand = innerLoopCommand;
     }
 
-    public LoopCommand(Memory memory) {
-        this.memory = memory;
-    }
+    public LoopCommand() {  }
 
     @Override
-    public void execute() {
-        ArrayList<operationalCode> commands = Analyzer.analyzer(memory);
-        Command mainCommand;
-        for (operationalCode command : commands){
-            mainCommand = command.getType();
-            mainCommand.execute();
-        }
+    public void execute(Memory memory) {
+        innerLoopCommand.doingInnerCommands();
     }
 }
