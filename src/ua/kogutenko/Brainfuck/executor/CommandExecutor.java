@@ -8,13 +8,12 @@ import java.util.ArrayList;
 
 public class CommandExecutor {
     private final List commandList = new ArrayList<Command>();
-    private Memory memory = new Memory();
 
     public void register(Command command) {
         commandList.add(command);
     }
 
-    public void execute() {
+    public void execute(Memory memory) {
         for (Object command : commandList) {
             Command comExecute = (Command) command;
             comExecute.execute(memory);

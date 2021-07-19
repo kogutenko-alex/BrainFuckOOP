@@ -53,7 +53,7 @@ public class Analyzer {
                                 stackILC.peek().addCommand(new WriteCommand());
                             break;
                         case '[':
-                            stackILC.push(new InnerLoopCommand(memory));
+                            stackILC.push(new InnerLoopCommand());
                             countInnerLoop++;
                             break;
                         case ']':
