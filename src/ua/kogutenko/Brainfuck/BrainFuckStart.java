@@ -6,10 +6,8 @@ import ua.kogutenko.Brainfuck.memory.Memory;
 
 public class BrainFuckStart {
     public static void main(String[] args) {
-        String str = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++"
-        + ".>+.+++++++..+++.>++.<<+++++++++++++++.>.+++."
-        + "------.--------.>+.>.";
-        //String str = "+[-[.]-]+";
+        //String str = args[0];
+        String str = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
         Memory memory = new Memory();
         CommandExecutor commandExecutor = Analyzer.analyzer(str, memory);
         commandExecutor.execute(memory);

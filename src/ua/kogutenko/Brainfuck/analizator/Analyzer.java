@@ -14,7 +14,6 @@ public class Analyzer {
         Stack<InnerLoopCommand> stackILC = new Stack<>();
         int pos = 0, countInnerLoop = 0;
         //Приходимся по всем символам
-        System.out.println(code);
 //        if(isValidBrackets(code)) {
             ifNotBreakCode: {
                 while (pos < code.length()) {
