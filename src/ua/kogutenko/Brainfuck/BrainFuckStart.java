@@ -9,7 +9,7 @@ public class BrainFuckStart {
         //String str = args[0];
         String str = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
         Memory memory = new Memory();
-        CommandExecutor commandExecutor = Analyzer.analyzer(str, memory);
+        CommandExecutor commandExecutor = Analyzer.analyzer(str);
         commandExecutor.execute(memory);
     }
 }

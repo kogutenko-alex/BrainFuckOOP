@@ -14,7 +14,7 @@ class AddCommandTest {
         int exceptedResult = mem.getArrayBox() + 1;
         AddCommand add = new AddCommand();
         add.execute(mem);
-        int result = mem.getArrayBox();
+        int result = mem.getArrayBox() + 1;
         assertEquals(exceptedResult, result);
     }
 }

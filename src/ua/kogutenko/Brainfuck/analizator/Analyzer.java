@@ -2,119 +2,56 @@ package ua.kogutenko.Brainfuck.analizator;
 
 import ua.kogutenko.Brainfuck.command.*;
 import ua.kogutenko.Brainfuck.executor.CommandExecutor;
-import ua.kogutenko.Brainfuck.memory.Memory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class Analyzer {
-    public static CommandExecutor analyzer(String innerCode, Memory memory) {
+    public static CommandExecutor analyzer(String innerCode) {
+        int pos = 0, countInnerLoop = 0;
         String code = innerCode;
-        //Создаем массив лексем (которые уже являются операшнл код и готовы к исполнению)
         CommandExecutor retValue = new CommandExecutor();
         Stack<InnerLoopCommand> stackILC = new Stack<>();
-        int pos = 0, countInnerLoop = 0;
-        //Приходимся по всем символам
-//        if(isValidBrackets(code)) {
-            ifNotBreakCode: {
-                while (pos < code.length()) {
-                    switch (code.charAt(pos++)) {
-                        //Как и говорилось ранее, некоторые команды эквивалентны
-                        case '>':
-                            if (countInnerLoop == 0)
-                                retValue.register(new NextCommand());
-                            if (countInnerLoop > 0)
-                                stackILC.peek().addCommand(new NextCommand());
-                            break;
-                        case '<':
-                            if (countInnerLoop == 0)
-                                retValue.register(new PreviousCommand());
-                            if (countInnerLoop > 0)
-                                stackILC.peek().addCommand(new PreviousCommand());
-                            break;
+        HashMap commandMap = new HashMap<Character, Command>();
+        commandMap.put('+', new AddCommand());
+        commandMap.put('-', new SubtractCommand());
+        commandMap.put('>', new NextCommand());
+        commandMap.put('<', new PreviousCommand());
+        commandMap.put(']', new LoopCommand());
+        commandMap.put('[', new InnerLoopCommand());
+        commandMap.put('.', new WriteCommand());
 
-                        case '+':
-                            if (countInnerLoop == 0)
-                                retValue.register(new AddCommand());
-                            if (countInnerLoop > 0)
-                                stackILC.peek().addCommand(new AddCommand());
-                            break;
-                        case '-':
-                            if (countInnerLoop == 0)
-                                retValue.register(new SubtractCommand());
-                            if (countInnerLoop > 0)
-                                stackILC.peek().addCommand(new SubtractCommand());
-                            break;
+        while (pos < code.length()) {
+            if(commandMap.containsKey(code.charAt(pos))){
+                // показываем что есть цикл
+                if (code.charAt(pos) == '[') {
+                    stackILC.push(new InnerLoopCommand());
+                    countInnerLoop++;
+                }
 
-                        case '.':
-                            if (countInnerLoop == 0)
-                                retValue.register(new WriteCommand());
-                            if (countInnerLoop > 0)
-                                stackILC.peek().addCommand(new WriteCommand());
-                            break;
-                        case '[':
-                            stackILC.push(new InnerLoopCommand());
-                            countInnerLoop++;
-                            break;
-                        case ']':
-                            countInnerLoop--;
-                            if (countInnerLoop == 0)
-                                retValue.register(new LoopCommand(stackILC.pop()));
-                            if (countInnerLoop > 0) {
-                                InnerLoopCommand ILC = stackILC.pop();
-                                stackILC.peek().addCommand(new LoopCommand(ILC));
-                            }
-                            break;
-                        case '\n': break;
-                        /*
-                        если будут дополнительные символы (фитчи) для
-                        брейнфак то дополним новым кейсом
-                        */
-                        default: break ifNotBreakCode;
+
+                // убираем цикл
+                if (code.charAt(pos) == ']') {
+                    countInnerLoop--;
+                    if (countInnerLoop == 0)
+                        retValue.register(new LoopCommand(stackILC.pop()));
+                    if (countInnerLoop > 0) {
+                        InnerLoopCommand ILC = stackILC.pop();
+                        stackILC.peek().addCommand(new LoopCommand(ILC));
                     }
                 }
-                return retValue;
-            }
-            System.out.println("There is incorrect char!!!" +
-                    "\nYour code: " + code +
-                    "\nIncorrect char is: " + code.substring(pos - 1, pos));
-//        } else {
-//            System.err.println("bad code line (brackets)");
-//        }
-        return new CommandExecutor();
-    }
-//    public static boolean isValidBrackets(String input) {
-//        Map<Character, Character> brackets = new HashMap<>();
-//        brackets.put(']', '[');
-//        Deque<Character> stack = new LinkedList<>();
-//        for (char c : input.toCharArray()) {
-//            if (brackets.containsValue(c)) {
-//                // одна из открывающих скобок
-//                stack.push(c);
-//            } else if (brackets.containsKey(c)) {
-//                // одна из закрывающих скобок
-//                if (stack.isEmpty() || stack.pop() != brackets.get(c)) {
-//                    return false;
-//                }
-//            }
-//        }
-//        // в конце стек должен быть пустым
-//        return stack.isEmpty();
-//    }
 
-//    public static int findClosedBracket(String input, int index) {
-//        Deque<Character> stack = new LinkedList<>();
-//        char[] inputToChar = input.toCharArray();
-//        for(int i = --index; i < inputToChar.length; i++){
-//            if(inputToChar[i] == '['){
-//                stack.push(inputToChar[i]);
-//            }
-//            if(inputToChar[i] == ']'){
-//                stack.pop();
-//            }
-//            if(stack.isEmpty()){
-//                return i;// the closing index of parenthesis
-//            }
-//        }
-//        return 0;
-//    }
+                // добавляем команды в основной список команд если она не в цикле
+                if (countInnerLoop == 0)
+                    retValue.register((Command) commandMap.get(code.charAt(pos)));
+                // добавляем команду во внутринее команды цикла
+                if (countInnerLoop > 0)
+                    stackILC.peek().addCommand((Command) commandMap.get(code.charAt(pos)));
+            }
+            pos++;
+
+        }
+        return retValue;
+    }
 }
+
