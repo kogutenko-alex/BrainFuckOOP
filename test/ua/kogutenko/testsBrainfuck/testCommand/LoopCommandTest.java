@@ -4,11 +4,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.jupiter.api.Test;
 import ua.kogutenko.Brainfuck.command.Command;
-import ua.kogutenko.Brainfuck.command.InnerLoopCommand;
-import ua.kogutenko.Brainfuck.command.LoopCommand;
 import ua.kogutenko.Brainfuck.memory.Memory;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoopCommandTest {
     Mockery context = new Mockery();

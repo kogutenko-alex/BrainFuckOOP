@@ -8,8 +8,6 @@ import ua.kogutenko.Brainfuck.memory.Memory;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class InnerLoopCommandTest {
     Mockery context = new Mockery();
 

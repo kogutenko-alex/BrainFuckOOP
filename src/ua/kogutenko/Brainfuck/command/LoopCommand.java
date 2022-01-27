@@ -6,14 +6,15 @@ public class LoopCommand implements Command {
 
     protected InnerLoopCommand innerLoopCommand;
 
-    public LoopCommand ( InnerLoopCommand innerLoopCommand ) {
+    public LoopCommand(InnerLoopCommand innerLoopCommand) {
         this.innerLoopCommand = innerLoopCommand;
     }
 
-    public LoopCommand() {  }
+    public LoopCommand() {
+    }
 
     @Override
-    public void execute ( Memory memory ) {
+    public void execute(Memory memory) {
         while (memory.getArrayBox() != 0) {
             innerLoopCommand.execute(memory);
         }

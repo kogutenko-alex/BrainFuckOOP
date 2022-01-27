@@ -8,8 +8,6 @@ import ua.kogutenko.Brainfuck.memory.Memory;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CommandExecutorTest {
     Mockery context = new Mockery();
 

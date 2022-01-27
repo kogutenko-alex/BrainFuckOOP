@@ -1,57 +1,62 @@
 package ua.kogutenko.Brainfuck.analizator;
 
-import ua.kogutenko.Brainfuck.command.*;
+import ua.kogutenko.Brainfuck.command.Command;
+import ua.kogutenko.Brainfuck.command.InnerLoopCommand;
+import ua.kogutenko.Brainfuck.command.LoopCommand;
 import ua.kogutenko.Brainfuck.executor.CommandExecutor;
 
-import java.util.HashMap;
 import java.util.Stack;
 
+import static ua.kogutenko.Brainfuck.analizator.CharEnumeration.*;
+
 public class Analyzer {
-    public static CommandExecutor analyzer(String innerCode) {
-        int pos = 0, countInnerLoop = 0;
-        String code = innerCode;
+
+    public static CommandExecutor analyzer(final String code) throws Exception {
+        int pos = 0;
+        String codeI = code;
         CommandExecutor retValue = new CommandExecutor();
+        CharEnumeration enumChar = null;
         Stack<InnerLoopCommand> stackILC = new Stack<>();
-        HashMap commandMap = new HashMap<Character, Command>();
-        commandMap.put('+', new AddCommand());
-        commandMap.put('-', new SubtractCommand());
-        commandMap.put('>', new NextCommand());
-        commandMap.put('<', new PreviousCommand());
-        commandMap.put(']', new LoopCommand());
-        commandMap.put('[', new InnerLoopCommand());
-        commandMap.put('.', new WriteCommand());
+        while (pos < code.length()){
+            char character = code.charAt(pos);
+            if (!isExistChar(character))
+                throw new Exception("wrong character: " + character);
 
-        while (pos < code.length()) {
-            if(commandMap.containsKey(code.charAt(pos))){
-                // показываем что есть цикл
-                if (code.charAt(pos) == '[') {
-                    stackILC.push(new InnerLoopCommand());
-                    countInnerLoop++;
-                }
-
-
-                // убираем цикл
-                if (code.charAt(pos) == ']') {
-                    countInnerLoop--;
-                    if (countInnerLoop == 0)
-                        retValue.register(new LoopCommand(stackILC.pop()));
-                    if (countInnerLoop > 0) {
-                        InnerLoopCommand ILC = stackILC.pop();
-                        stackILC.peek().addCommand(new LoopCommand(ILC));
-                    }
-                }
-
-                // добавляем команды в основной список команд если она не в цикле
-                if (countInnerLoop == 0)
-                    retValue.register((Command) commandMap.get(code.charAt(pos)));
-                // добавляем команду во внутринее команды цикла
-                if (countInnerLoop > 0)
-                    stackILC.peek().addCommand((Command) commandMap.get(code.charAt(pos)));
+            enumChar = getCommandByChar(character);
+            if (enumChar.getCommandObject() instanceof InnerLoopCommand) {
+                stackILC.push((InnerLoopCommand) OPEN_BRACKET.getCommandObject());
+                codeI = codeI.substring(++pos);
+                continue;
             }
-            pos++;
-
+            if (enumChar.getCommandObject() instanceof LoopCommand) {
+                if (!stackILC.isEmpty() && stackILC.size() > 1){
+                    Command command = new LoopCommand(stackILC.pop());
+                    stackILC.peek().addCommand(command);
+                }
+                else {
+                    retValue.register(
+                            CharEnumeration.CLOSE_BRACKET.getCommandClass()
+                                    .getConstructor(OPEN_BRACKET.getCommandClass())
+                                    .newInstance(stackILC.pop())
+                    );
+                }
+                codeI = codeI.substring(++pos);
+                continue;
+            }
+            if (!stackILC.isEmpty())
+                stackILC.peek().addCommand(
+                        enumChar.getCommandObject()
+                );
+            else
+                retValue.register(
+                        enumChar.getCommandObject()
+                );
+            codeI = code.substring(++pos);
         }
+
+        if (!stackILC.isEmpty()) throw new Exception("fail with amount brackets");
         return retValue;
+
     }
 }
 
