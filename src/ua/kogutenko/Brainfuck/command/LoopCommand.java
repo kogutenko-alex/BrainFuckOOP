@@ -15,8 +15,8 @@ public class LoopCommand implements Command {
 
     @Override
     public void execute(Memory memory) {
-        while (memory.getArrayBox() != 0) {
-            innerLoopCommand.execute(memory);
-        }
+            while (memory.getArrayBox() != 0) {
+                innerLoopCommand.execute(memory);
+            }
     }
 }

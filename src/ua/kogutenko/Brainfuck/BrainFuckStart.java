@@ -12,7 +12,7 @@ public class BrainFuckStart {
             //String str = "++[+>]-";
             System.out.println("Length input: " + str.length());
             Memory memory = new Memory();
-            CommandExecutor commandExecutor = Analyzer.analyzer(str);
+            CommandExecutor commandExecutor = new Analyzer().analyzer(str);
             commandExecutor.execute(memory);
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,16 +27,4 @@ class MemoryTest {
         assertEquals(1, memory.getArrayBox());
     }
 
-    @Test
-    void changeCurrentBox() {
-        memory.changeCurrentBox(2);
-        assertEquals(2, memory.getArrayBox());
-    }
-
-    @Test
-    void setCurrentIndex() {
-        int exceptedResult = 10;
-        memory.setCurrentIndex(exceptedResult);
-        assertEquals(exceptedResult, memory.getCurrentIndex());
-    }
 }

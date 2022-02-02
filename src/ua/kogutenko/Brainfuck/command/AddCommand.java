@@ -8,7 +8,7 @@ public class AddCommand implements Command {
 
     @Override
     public void execute(Memory memory) {
-        memory.changeCurrentBox(memory.getArrayBox() + 1);
+        memory.plus();
     }
 
 }

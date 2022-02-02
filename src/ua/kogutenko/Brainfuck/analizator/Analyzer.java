@@ -1,62 +1,61 @@
 package ua.kogutenko.Brainfuck.analizator;
 
-import ua.kogutenko.Brainfuck.command.Command;
-import ua.kogutenko.Brainfuck.command.InnerLoopCommand;
-import ua.kogutenko.Brainfuck.command.LoopCommand;
+import ua.kogutenko.Brainfuck.command.*;
 import ua.kogutenko.Brainfuck.executor.CommandExecutor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
-
-import static ua.kogutenko.Brainfuck.analizator.CharEnumeration.*;
 
 public class Analyzer {
 
-    public static CommandExecutor analyzer(final String code) throws Exception {
-        int pos = 0;
-        String codeI = code;
-        CommandExecutor retValue = new CommandExecutor();
-        CharEnumeration enumChar = null;
-        Stack<InnerLoopCommand> stackILC = new Stack<>();
-        while (pos < code.length()){
-            char character = code.charAt(pos);
-            if (!isExistChar(character))
-                throw new Exception("wrong character: " + character);
+    private final CommandExecutor executor = new CommandExecutor();
+    private final Stack<InnerLoopCommand> stackILC = new Stack<>();
+    public CommandExecutor analyzer(String code) throws Exception {
+        for (byte currentByte : code.getBytes()) {
+            char currentChar = (char) currentByte;
 
-            enumChar = getCommandByChar(character);
-            if (enumChar.getCommandObject() instanceof InnerLoopCommand) {
-                stackILC.push((InnerLoopCommand) OPEN_BRACKET.getCommandObject());
-                codeI = codeI.substring(++pos);
-                continue;
+            if (!CharEnumeration.isExistChar(currentChar)) {
+                throw new Exception("is not exist char: " + currentChar);
             }
-            if (enumChar.getCommandObject() instanceof LoopCommand) {
-                if (!stackILC.isEmpty() && stackILC.size() > 1){
-                    Command command = new LoopCommand(stackILC.pop());
-                    stackILC.peek().addCommand(command);
-                }
-                else {
-                    retValue.register(
-                            CharEnumeration.CLOSE_BRACKET.getCommandClass()
-                                    .getConstructor(OPEN_BRACKET.getCommandClass())
-                                    .newInstance(stackILC.pop())
-                    );
-                }
-                codeI = codeI.substring(++pos);
-                continue;
-            }
-            if (!stackILC.isEmpty())
-                stackILC.peek().addCommand(
-                        enumChar.getCommandObject()
-                );
-            else
-                retValue.register(
-                        enumChar.getCommandObject()
-                );
-            codeI = code.substring(++pos);
+
+            putCommandToExecutor(CharEnumeration.getCommandByChar(currentChar).getCommandObject());
+        }
+        return executor;
+    }
+
+    private void putCommandToExecutor(Command currentCommand) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        // добавляем цикл
+        if (currentCommand instanceof InnerLoopCommand) {
+            stackILC.push((InnerLoopCommand) currentCommand);
+            return;
         }
 
-        if (!stackILC.isEmpty()) throw new Exception("fail with amount brackets");
-        return retValue;
+        // убираем цикл
+        if (currentCommand instanceof LoopCommand) {
+            putCommandToBacked(currentCommand);
+            return;
+        }
 
+
+        // добавляем команды в основной список команд если она не в цикле
+        if (stackILC.isEmpty()) executor.register(currentCommand);
+            // добавляем команду во внутринее команды цикла
+        else stackILC.peek().addCommand(currentCommand);
+    }
+
+    private void putCommandToBacked(Command currentCommand) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        InnerLoopCommand command = stackILC.pop();
+        if (stackILC.isEmpty()) {
+            executor.register(
+                    currentCommand.getClass()
+                            .getConstructor(InnerLoopCommand.class)
+                            .newInstance(command));
+        } else {
+            stackILC.peek().addCommand(
+                    currentCommand.getClass()
+                            .getConstructor(InnerLoopCommand.class)
+                            .newInstance(command));
+        }
     }
 }
 

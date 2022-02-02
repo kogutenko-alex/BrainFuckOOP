@@ -6,17 +6,15 @@ import java.util.ArrayList;
 
 public class InnerLoopCommand implements Command {
 
-    protected ArrayList<Command> arrayCommand = new ArrayList<>();
+    protected ArrayList<Command> commands = new ArrayList<>();
 
     public <T extends Command> boolean addCommand (T command) {
-        return arrayCommand.add(command);
+        return commands.add(command);
     }
 
     @Override
     public void execute(Memory memory) {
-        Command command;
-        for (Command value : arrayCommand) {
-            command = value;
+        for (Command command : commands) {
             command.execute(memory);
         }
     }

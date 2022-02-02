@@ -6,7 +6,7 @@ public class PreviousCommand implements Command {
 
     @Override
     public void execute(Memory memory) {
-        memory.setCurrentIndex(memory.getCurrentIndex() - 1);
+        memory.previous();
     }
 
 }
